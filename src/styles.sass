@@ -4,6 +4,9 @@ $bg: #ebebeb
 $font: Open Sans, sans-serif
 $white: #ffffff
 
+*
+    box-sizing: border-box
+
 .tags-cloud
 
     &__selected
@@ -97,7 +100,7 @@ $white: #ffffff
             cursor: pointer
             width: 30px
             height: 30px
-            background-image: url(/img/trash-can.svg)
+            background-image: url(/img/icons/trash-can.svg)
             background-repeat: no-repeat
             background-size: 9px 11px
             background-position: 50% 50%
@@ -120,12 +123,18 @@ $white: #ffffff
     position: absolute
     left: 0
     background: $white
+    width: 100%
+    max-height: 300px
+    overflow: auto
 
     &__option
         color: $blue
         font: 14px/120% $font
-        padding: 5px
+        padding: 10px
         cursor: pointer
+        width: 100%
+        border: 1px solid whitesmoke
+        text-align: left
 
         &:hover
             background-color: $blue
@@ -136,6 +145,17 @@ $white: #ffffff
 
 .multi-select-search
     position: relative
+    width: 100%
+    max-width: 540px
+
+.text-input
+    width: 100%
+
+    &__input
+        width: 100%
+        height: 50px
+        font: 16px/122% $font
+        padding: 0 15px
 
 @keyframes jump
     0%

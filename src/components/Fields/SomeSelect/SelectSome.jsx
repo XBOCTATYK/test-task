@@ -6,6 +6,13 @@ const DEFAULT_OPTIONS = {
     min: 0
 };
 
+/**
+ *
+ * @param InputComponent - компонент с интупом в котором вводятся значения
+ * @param ListComponent - список выбранных значений
+ * @param options - дополнительные параметры
+ * @returns {{defaultProps, new<P, S>(props: Readonly<P>): SelectSomeComponent, new<P, S>(props: P, context?: any): SelectSomeComponent, prototype: SelectSomeComponent}}
+ */
 export const selectSome = function(InputComponent, ListComponent, options = DEFAULT_OPTIONS) {
     return class SelectSomeComponent extends Component {
 

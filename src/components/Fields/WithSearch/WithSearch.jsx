@@ -2,14 +2,23 @@ import React, {Component} from 'react';
 import {emptyFunction} from "../../../helpers/emptyFuction";
 
 const defaultFilteredFunction = (item, value) => {
-    return item.label.indexOf(value) !== -1;
+    const lowerCaseLabel = item.label.toLowerCase();
+    const lowerCaseValue = value.toLowerCase();
+    return lowerCaseLabel.indexOf(lowerCaseValue) !== -1;
 };
 
 const DEFAULT_OPTIONS = {
     filterFunction: defaultFilteredFunction
 };
 
-export const widthSearch = function(InputComponent, SelectComponent, options = DEFAULT_OPTIONS) {
+/**
+ * Фильтрация элементов в зависимости от введенного значения инпута
+ * @param InputComponent - компонент с интупом, по значению которого будут фильтроваться данные
+ * @param ListComponent - компонент для которого фильтруются данные
+ * @param options
+ * @returns {{defaultProps, new<P, S>(props: Readonly<P>): SearchItemsComponent, new<P, S>(props: P, context?: any): SearchItemsComponent, prototype: SearchItemsComponent}}
+ */
+export const widthSearch = function(InputComponent, ListComponent, options = DEFAULT_OPTIONS) {
     return class SearchItemsComponent extends Component {
 
         static defaultProps = {
@@ -24,51 +33,69 @@ export const widthSearch = function(InputComponent, SelectComponent, options = D
             items: this.props.items || [],
             value: '',
             selectValue: '',
-            opened: false
+            active: false
         };
 
         componentDidMount() {
             if (this.props.value) {
-                this.filterItems();
+                this._filterItems(this.props.items);
             }
+
         }
 
         onChange = (event) => {
+            console.log(event.target);
             const value = event.target.value;
-            let items = this._filterItems(this.props.items, value);
 
-            if (!items.length) {
-                items = [{value: -1, label: 'Не найдено вариантов по вашему запросу', disabled: true}];
-            }
-
-            this.setState({value: value, items: items})
+            this.setState({value: value, active: true})
         };
 
         onSelect = (event) => {
             const value = event.target.value;
 
             this.props.onChange({target: {value: value, name: this.props.name}});
-            this.setState({selectValue: value, opened: false})
+            this.setState({selectValue: value, active: false, value: ''})
         };
 
-        onFocus = () => {
-            this.setState({opened: true})
+        onFocus = (event) => {
+            this.setState({active: true})
         };
 
+        onBlur = () => {
+            /* Чтобы успевал срабатывать клик по опции */
+            setTimeout(() => {
+                this.setState({active: false})
+            }, 200);
+        };
+
+        componentDidUpdate(prevProps, prevState, snapshot) {
+            if (prevProps.items !== this.props.items) {
+                this.setState({items: this.props.items})
+            }
+        }
 
         _filterItems = (items, value) => {
             if (!value) return items;
 
-            return items.filter(item => {
+            let newItems =  items.filter(item => {
                return this.props.filterFunction(item, value);
             });
+
+            if (!newItems.length) {
+                newItems = [{value: -1, label: 'Не найдено вариантов по вашему запросу', disabled: true}];
+            }
+
+            return newItems;
         };
 
         render() {
             return (
             <React.Fragment>
-                <InputComponent onFocus={this.onFocus} onChange={this.onChange}/>
-                <SelectComponent onChange={this.onSelect} open={this.state.opened} value={this.state.selectValue} items={this.state.items}/>
+                <InputComponent onFocus={this.onFocus} onChange={this.onChange} onBlur={this.onBlur} value={this.state.value}/>
+                <ListComponent onChange={this.onSelect}
+                                 open={this.state.active}
+                                 value={this.state.selectValue}
+                                 items={this._filterItems(this.props.items, this.state.value)}/>
             </React.Fragment>
             )
         }
