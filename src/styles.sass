@@ -1,0 +1,146 @@
+$blue: #0f2345
+$red: #e76565
+$bg: #ebebeb
+$font: Open Sans, sans-serif
+$white: #ffffff
+
+.tags-cloud
+
+    &__selected
+        .tag
+        color: $blue
+
+
+    &__input
+        border-radius: 5px
+        overflow: hidden
+        max-height: 50px
+        opacity: 1
+        transition: max-height .25s, transform .25s .25s, opacity .25s .25s, padding .25s, position .25s
+        position: relative
+
+        &.disabled
+            position: absolute
+            max-height: 0
+            opacity: 0
+            padding: 0
+            transition: max-height .25s .25s, transform .25s, opacity .25s, padding .25s .25s
+
+        &.error
+            border-color: $red
+
+            & + .tags-cloud__input-error
+                opacity: 1
+                z-index: 1
+
+
+    &__selected
+        transition: .25s
+        padding: 5px 0 10px
+
+        &.no-items
+            padding: 0
+
+    &__add
+        position: relative
+        opacity: 1
+        z-index: 1
+        transition: .25s .25s !important
+
+
+        &.disabled
+            position: absolute
+            opacity: 0
+            z-index: -1
+            transition: .25s 0s !important
+
+    &-select
+        overflow: auto !important
+
+    &__error-notify
+        opacity: 0
+        margin-left: auto
+        z-index: -1
+        font: 12px/122% $font
+        color: $red
+        position: absolute
+        display: inline-block
+        bottom: 54px
+        right: 30px
+        transition: opacity .25s
+
+        &.active
+            opacity: 1
+            z-index: 1
+
+
+    .tag-int
+        position: relative
+        background: $bg
+        border: 0
+        padding: 5px 40px 5px 10px
+        font: 16px/21px $font
+        display: inline-block
+        margin-right: 10px
+        transition: transform .3s, opacity .3s
+        transform: scale(0)
+        opacity: 1
+        margin-bottom: 10px
+
+        &.appear
+            transform: scale(1)
+
+        &__delete
+            position: absolute
+            right: 0
+            top: 0
+            cursor: pointer
+            width: 30px
+            height: 30px
+            background-image: url(/img/trash-can.svg)
+            background-repeat: no-repeat
+            background-size: 9px 11px
+            background-position: 50% 50%
+            display: inline-block
+            vertical-align: middle
+
+            &:hover
+                animation: jump .3s
+
+        &.disappear
+            transform: scale(0)
+            opacity: 0
+
+.text-in-border
+    padding: 20px 15px
+    border: 2px solid $blue
+
+
+.select-list
+    position: absolute
+    left: 0
+    background: $white
+
+    &__option
+        color: $blue
+        font: 14px/120% $font
+        padding: 5px
+        cursor: pointer
+
+        &:hover
+            background-color: $blue
+            color: $white
+
+        &.disabled
+            pointer-events: none
+
+.multi-select-search
+    position: relative
+
+@keyframes jump
+    0%
+        transform: translateY(0)
+    60%
+        transform: translateY(-3px)
+    100%
+        transform: translateY(0)
